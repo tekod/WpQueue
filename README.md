@@ -7,7 +7,6 @@ and thus drastically speeding up the web requests of your application.
 
 This library is WordPress implementation of AccentPHP's Queue library.
 
-
 ## Usage
 
 For beginning, you must initialize and configure your first queue manager.
