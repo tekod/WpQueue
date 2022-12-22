@@ -3,7 +3,7 @@
 
 # WpQueue
 By using queue developer can defer the processing of a time-consuming task for later time,
-and thus drastically speeding up the web requests to your application.
+and thus drastically speeding up the web requests of your application.
 
 This library is WordPress implementation of AccentPHP's Queue library.
 
@@ -53,8 +53,10 @@ To run your queue you should execute WpQueue::run() and specify what jobs you
 want to execute and few config options. 
 If you specify parameter only jobs of that name will be executed, otherwise queue will execute all type of jobs.
 ```php
-$queue->run('SendEmail');
+$queue->run();
 ```
+Queue will execute all currently available jobs in loop, 
+but each job can push more jobs into queue, with high or low priority, so execution can be very dynamic.
 
 Note that multiple handlers can be registered on single job name,
 queue manager will pass job to first handler and if it does not mark it
