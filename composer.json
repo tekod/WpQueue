@@ -1,0 +1,26 @@
+{
+	"name": "tekod/wp-queue",
+	"description": "Robust WordPress library for managing queued jobs.",
+	"keywords": [
+		"wp", "wordpress", "queue", "jobs", "cron"
+	],
+	"type": "library",
+	"license": "MIT",
+	"homepage": "https://gitlab.com/tekod/WpQueue",
+	"authors": [{
+		"name": "miroslav curcic",
+		"email": "office@tekod.com",
+		"homepage": "https://www.tekod.com"
+	}],
+	"require": {
+		"php": ">=7.1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Tekod\\WpQueue\\": "src/"
+		},
+		"files": [
+			"src/functions.php"
+		]
+	}
+}
