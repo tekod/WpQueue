@@ -3,8 +3,6 @@ declare(strict_types=1);
 namespace Tekod\WpQueue;
 
 
-use Tekod\WpQueue\Storage\AbstractStorage;
-
 /**
  * Queue manager and worker.
  */
@@ -136,8 +134,9 @@ class Queue {
      * @param int $runAfter
      * @return bool
      */
-    public function add(string $name, array $data, int $priority = 10, int $runAfter = 0): bool {
+    public function add(string $name, array $data, int $priority=10, int $runAfter=0): bool {
 
+        $this->configurationCheck();
         $this->log('Added "' . $name . '" job.');
         return $this->storage->add($name, $data, $priority, $runAfter);
     }
@@ -152,7 +151,8 @@ class Queue {
      */
     public function count(?string $jobName=null, bool $includingDeferred=false): int
     {
-        return $this->storage->getCount($jobName);
+        $this->configurationCheck();
+        return $this->storage->getCount($jobName, $includingDeferred);
     }
 
 
@@ -168,8 +168,11 @@ class Queue {
      * @param bool        $singleJob  find and return only first job in queue or all available jobs
      * @return array
      */
-    public function claim(?string $jobName = null, bool $singleJob = true): array {
+    public function claim(?string $jobName=null, bool $singleJob=true): array {
 
+        $this->configurationCheck();
+
+        // loop
         do {
             // load from storage
             $jobs = $this->storage->claim($jobName, $singleJob);
@@ -205,6 +208,7 @@ class Queue {
      */
     public function release(Job $job, bool $incFailCount=true, bool $runAfter=null): void {
 
+        $this->configurationCheck();
         $this->storage->release($job->getId(), $job->getFailCount(), $incFailCount, $runAfter);
     }
 
@@ -214,6 +218,7 @@ class Queue {
      */
     public function clear(): void {
 
+        $this->configurationCheck();
         $this->storage->clear();
         $this->log('Cleared.');
     }
@@ -246,7 +251,9 @@ class Queue {
      * @param string|null $name
      * @return bool|null  status of last executed job
      */
-    public function run(?string $name = null): ?bool {
+    public function run(?string $name=null): ?bool {
+
+        $this->configurationCheck();
 
         // adjust environment
         wp_raise_memory_limit('admin');  // maximize memory pool
@@ -454,6 +461,17 @@ class Queue {
     public function registerJobHandler(string $name, $callable, int $priority = 10): void {
 
         $this->handlers[$name][$priority][] = $callable;
+    }
+
+
+    /**
+     * Confirm that queue is configured.
+     */
+    protected function configurationCheck() {
+
+        if (!$this->storage) {
+            throw new \Error('Using non-configured queue "' . $this->instanceName. ' ".');
+        }
     }
 
 

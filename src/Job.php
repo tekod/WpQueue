@@ -125,7 +125,7 @@ class Job
      *
      * @param bool $status
      */
-    public function setHandled(bool $status = true): void {
+    public function setHandled(bool $status=true): void {
 
         $this->handled = $status;
     }
@@ -138,7 +138,7 @@ class Job
      * @param bool     $incFailCount  increment count of failed attempts
      * @param null|int $runAfter  schedule time of next attempt
      */
-    public function setReleased(bool $status = true, bool $incFailCount = true, ?int $runAfter = null): void {
+    public function setReleased(bool $status=true, bool $incFailCount=true, ?int $runAfter=null): void {
 
         $this->setHandled($status); // release affects "handled" too
 
